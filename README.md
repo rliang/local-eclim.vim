@@ -20,7 +20,12 @@ The install script needs the following programs:
 * `curl` or 'wget'
 * `md5sum`
 * `tar` (Unix) or 'unzip' (Windows)
+
 Not yet tested on Windows or OS X; contributions welcome.
 
 ## Commands
 * `:StartEclim`: starts the Eclim daemon.
+
+## Credits
+Inspired by the <https://github.com/starcraftman/vim-eclim> plugin, with some
+initialization code borrowed from it.
