@@ -19,7 +19,7 @@ The install script needs the following programs:
 * `which`
 * `curl` or 'wget'
 * `md5sum`
-* `tar` (Unix) or 'unzip' (Windows)
+* `tar` (Unix) or `unzip` (Windows)
 
 Not yet tested on Windows or OS X; contributions welcome.
 
