@@ -1,6 +1,6 @@
+*.tar.gz
+*.zip
+*.jar
 eclipse/
-eclipse.tar.gz
-eclipse.zip
 eclim/
-eclim.jar
 plugin/eclim.vim

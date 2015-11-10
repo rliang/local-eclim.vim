@@ -1,0 +1,88 @@
+<project default="eclim.install">
+
+  <property name="eclipse.release" value="mars"/>
+  <property name="eclipse.point" value="1"/>
+  <property name="eclim.release" value="2.5.0"/>
+
+  <condition property="windows">
+    <os family="windows"/>
+  </condition>
+
+  <condition property="eclipse.arch" value="-x86_64" else="">
+    <os arch="amd64"/>
+  </condition>
+  <condition property="eclipse.format" value="zip" else="tar.gz">
+    <os family="windows"/>
+  </condition>
+  <condition property="eclipse.dist" value="win32.zip">
+    <os family="windows"/>
+  </condition>
+  <condition property="eclipse.dist" value="macosx-cocoa" else="linux-gtk">
+    <os family="mac"/>
+  </condition>
+
+  <property name="eclipse.file" value="eclipse-java-${eclipse.release}-${eclipse.point}-${eclipse.dist}${eclipse.arch}.${eclipse.format}"/>
+  <property name="eclipse.dir" value="${basedir}/eclipse"/>
+  <property name="eclim.file" value="eclim_${eclim.release}.jar"/>
+
+  <target name="eclipse.file.get">
+    <echo>http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/${eclipse.release}/${eclipse.point}/${eclipse.file}&amp;r=1</echo>
+    <get verbose="true" src="http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/${eclipse.release}/${eclipse.point}/${eclipse.file}&amp;r=1" dest="${eclipse.file}"/>
+  </target>
+  <target name="eclipse.file.check" unless="eclim.file.valid">
+    <condition property="eclipse.file.valid">
+      <and>
+        <available file="${eclipse.file}" type="file"/>
+        <checksum file="${eclipse.file}" verifyProperty="isMD5ok"/>
+      </and>
+    </condition>
+  </target>
+  <target name="eclipse.file.try-get" unless="eclipse.file.valid" depends="eclipse.file.check">
+    <antcall target="eclipse.file.get"/>
+  </target>
+
+  <target name="eclipse.file.try-untar" unless="windows">
+    <untar src="${eclipse.file}" dest="${basedir}" compression="gzip"/>
+  </target>
+  <target name="eclipse.file.try-unzip" if="windows">
+    <unzip src="${eclipse.file}" dest="${basedir}"/>
+  </target>
+  <target name="eclipse.install">
+    <antcall target="eclipse.file.try-untar"/>
+    <antcall target="eclipse.file.try-unzip"/>
+  </target>
+
+  <target name="eclipse.dir.check" unless="eclim.dir.valid">
+    <condition property="eclipse.dir.valid">
+      <available file="${eclipse.dir}" type="dir"/>
+    </condition>
+  </target>
+  <target name="eclipse.try-install" unless="eclipse.dir.valid" depends="eclipse.dir.check">
+    <antcall target="eclipse.file.try-get"/>
+    <antcall target="eclipse.install"/>
+  </target>
+
+  <target name="eclim.file.get">
+    <get verbose="true" src="http://downloads.sourceforge.net/project/eclim/eclim/${eclim.release}/${eclim.file}" dest="${eclim.file}"/>
+  </target>
+  <target name="eclim.file.check" unless="eclim.file.valid">
+    <condition property="eclim.file.valid">
+      <and>
+        <available file="${eclim.file}" type="file"/>
+        <checksum file="${eclim.file}" verifyProperty="isMD5ok"/>
+      </and>
+    </condition>
+  </target>
+  <target name="eclim.file.try-get" unless="eclim.file.valid" depends="eclim.file.check">
+    <antcall target="eclim.file.get"/>
+  </target>
+
+  <target name="eclim.install" depends="eclipse.try-install,eclim.file.try-get">
+    <java jar="${eclim.file}" fork="true">
+      <jvmarg value="-Dvim.files=${basedir}"/>
+      <jvmarg value="-Declipse.home=${eclipse.dir}"/>
+      <arg value="install"/>
+    </java>
+  </target>
+
+</project>
