@@ -26,7 +26,6 @@
   <property name="eclim.file" value="eclim_${eclim.release}.jar"/>
 
   <target name="eclipse.file.get">
-    <echo>http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/${eclipse.release}/${eclipse.point}/${eclipse.file}&amp;r=1</echo>
     <get verbose="true" src="http://www.eclipse.org/downloads/download.php?file=/technology/epp/downloads/release/${eclipse.release}/${eclipse.point}/${eclipse.file}&amp;r=1" dest="${eclipse.file}"/>
   </target>
   <target name="eclipse.file.check" unless="eclim.file.valid">
